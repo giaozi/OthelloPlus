@@ -6,7 +6,7 @@ using WebSocketSharp;
 public class WebsocketConnection : MonoBehaviour
 {
     WebSocket ws;
-    public async void Start()
+    public void Start()
     {
         ws = new WebSocket("wss://othellotestserver.bw55555.repl.co");
         ws.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
@@ -14,6 +14,9 @@ public class WebsocketConnection : MonoBehaviour
         {
             Debug.Log($"Received {e.Data} from server");
             Debug.Log($"Sender: {((WebSocket)sender).Url}");
+        };
+        ws.OnError += (sender, e) => {
+            Debug.Log($"Websocket Error: {e.Message}");
         };
 
         ws.Connect();
@@ -26,12 +29,17 @@ public class WebsocketConnection : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            WebsocketSendText();
+            WebsocketSendText("Ping");
         }
     }
 
-    private async void WebsocketSendText()
+    private void WebsocketSendText(string text)
     {
-        ws.Send("Hello");
+        ws.Send(text);
+    }
+
+    private void WebsocketSendText(string text)
+    {
+        ws.Send(text);
     }
 }
