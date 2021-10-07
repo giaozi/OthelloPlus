@@ -46,7 +46,7 @@ public class WebsocketManager : MonoBehaviour
 
     public static void WebsocketSendText(string text)
     {
-        if (ws == null) { Debug.Log("Hi3"); return; }
+        if (ws == null) { Debug.Log("Tried to send text to a null websocket: " +text); return; }
         ws.Send(text);
     }
 }
