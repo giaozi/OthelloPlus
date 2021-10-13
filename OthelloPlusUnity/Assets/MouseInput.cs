@@ -15,21 +15,21 @@ public class MouseInput : MonoBehaviour
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
-            Debug(GetMousePosition();)
+        {
+            Debug.Log("Click");
+            Debug.Log("Tile Position @" + GetMouseTilePosition());
+            WebsocketManager.WebsocketSendText(Input.mousePosition.ToString());
+        }
 
 
     }
 
-    Vector3Int GetMousePosition()
+    Vector3Int GetMouseTilePosition()
     {
-        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint;
-                   
-        {
-            Vector3 _mousePosition = Input.mousePosition;
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        return grid.WorldToCell(mouseWorldPos);
 
-           return grid.WorldToCell(_mousePosition)
-
-        }
+     
     }
 
     /*ClickedOnTile ()
