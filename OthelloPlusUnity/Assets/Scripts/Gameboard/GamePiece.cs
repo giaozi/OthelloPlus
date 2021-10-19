@@ -1,17 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+
 public class GamePiece 
 {
-    PieceColor pieceColor;
-    Vector2Int boardLocation;
+    public enum PieceColor { Empty, White, Black }
 
-    public enum PieceColor { White, Black}
+    public PieceColor pieceColor = PieceColor.Empty;
+    public Vector2Int boardLocation;
+    public Tile tile = null;
+
+
 
     public string name;
-    public GamePiece(PieceColor _pieceColor, Vector2Int _boardlocation)
+
+    public GamePiece(PieceColor _pieceColor)
     {
         pieceColor = _pieceColor;
-        boardLocation = _boardlocation;
+    }
+    public GamePiece(PieceColor _pieceColor, Tile _tile)
+    {
+        pieceColor = _pieceColor;
+        tile = _tile;
     }
 }

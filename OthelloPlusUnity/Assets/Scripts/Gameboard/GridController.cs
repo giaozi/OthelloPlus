@@ -9,8 +9,11 @@ public class GridController : MonoBehaviour
     [SerializeField] private Tilemap interactiveMap = null;
     [SerializeField] private Tilemap boardMap = null;
     [SerializeField] private Tile hoverTile = null;
-    [SerializeField] private Tile boardTile = null;
+    //[SerializeField] private Tile boardTile = null;
+    [SerializeField] private Tile whiteBoardTile = null;
+    [SerializeField] private Tile blackBoardTile = null;
 
+    [SerializeField] private BoardState boardState = null;
 
 
     private Vector3Int previousMousePos = new Vector3Int();
@@ -29,8 +32,8 @@ public class GridController : MonoBehaviour
        Vector3Int mousePos = GetMouseTilePosition();
        if (!mousePos.Equals(previousMousePos))
        {
-            if (!CanPlaceTile(mousePos)) { return; }
-            Debug.Log("Replacing @" + mousePos);
+            if (!boardState.IsInsideBoard(mousePos)) { return; }
+
             interactiveMap.SetTile(previousMousePos, null); // Remove old hoverTile
             interactiveMap.SetTile(mousePos, hoverTile);
             previousMousePos = mousePos;
@@ -41,7 +44,9 @@ public class GridController : MonoBehaviour
        {
             Debug.Log("Click");
             Debug.Log("Tile Position @" + GetMouseTilePosition());
-            boardMap.SetTile(mousePos, boardTile);
+
+
+            boardState.PlacePiece (NewGamePiece(GamePiece.PieceColor.Black),  GetMouseTilePosition());
            //WebsocketManager.WebsocketSendText(Input.mousePosition.ToString());
        }
 
@@ -50,6 +55,11 @@ public class GridController : MonoBehaviour
        {
             boardMap.SetTile(mousePos, null);
        }
+
+        if (Input.GetKey(KeyCode.Q))
+        {
+            Debug.Log("Piece @" + GetMouseTilePosition() + " is "+ boardState.LocationStatus(GetMouseTilePosition()).pieceColor);
+        }
    }
     Vector3Int GetMouseTilePosition()
     {
@@ -60,15 +70,27 @@ public class GridController : MonoBehaviour
         return mouseGridPos;
     }
 
-    bool CanPlaceTile(Vector3Int targetPos)
+    //used to set the tile
+    GamePiece NewGamePiece(GamePiece.PieceColor color)
     {
-        if (-4 > targetPos.x || 3 < targetPos.x)
-            return false;
-        if (-4 > targetPos.y || 3 < targetPos.y)
-            return false;
-        return true;
-    }
-    
+        if(color != GamePiece.PieceColor.White && color != GamePiece.PieceColor.Black)
+        {
+            Debug.LogWarning("Piece has no color");
+            return null;
+        }
+
+
+        Tile newPieceTile =null;
+        if(color == GamePiece.PieceColor.White) { newPieceTile = whiteBoardTile; }
+        if(color == GamePiece.PieceColor.Black) { newPieceTile = blackBoardTile; }
+
+
+        return new GamePiece(color, newPieceTile);
+
+ 
+     }
+
+
 }
 
 
