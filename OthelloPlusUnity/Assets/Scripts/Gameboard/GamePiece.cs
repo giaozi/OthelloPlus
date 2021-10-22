@@ -18,10 +18,13 @@ public class GamePiece
     public GamePiece(PieceColor _pieceColor)
     {
         pieceColor = _pieceColor;
+
+        if(_pieceColor == PieceColor.White)  
+            tile = Resources.Load<Tile>("Tiles/Tile_White");
+        if (_pieceColor == PieceColor.Black)
+            tile = Resources.Load<Tile>("Tiles/Tile_Black");
+        if (_pieceColor == PieceColor.Empty)
+            tile = null;
     }
-    public GamePiece(PieceColor _pieceColor, Tile _tile)
-    {
-        pieceColor = _pieceColor;
-        tile = _tile;
-    }
+
 }

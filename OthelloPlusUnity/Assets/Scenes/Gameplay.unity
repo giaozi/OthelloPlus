@@ -1381,8 +1381,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactiveMap: {fileID: 1180428193}
-  boardMap: {fileID: 1262440939}
-  hoverTile: {fileID: 11400000, guid: 4ba9880225696284ebc57a30807dac5a, type: 2}
+  piecesMap: {fileID: 1262440939}
   whiteBoardTile: {fileID: 11400000, guid: 4ba9880225696284ebc57a30807dac5a, type: 2}
   blackBoardTile: {fileID: 11400000, guid: 05cb24c936bf346479fef1b01c8cb314, type: 2}
   boardState: {fileID: 794192539}

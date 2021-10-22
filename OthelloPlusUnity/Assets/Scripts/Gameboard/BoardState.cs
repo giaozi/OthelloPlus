@@ -9,15 +9,16 @@ public class BoardState : MonoBehaviour
     [SerializeField] private Tilemap boardMap = null;
 
 
-
+    int boardWidth;
+    int boardLength;
 
     GamePiece[,] BoardData = new GamePiece[8, 8];
 
-    void SetUpBoardData()
+    void SetUpBoardData(int width, int legnth)
     {
-        for (int i = 0; i < BoardData.GetLength(0); i++)
+        for (int i = 0; i < width; i++)
         {
-            for (int j = 0; j < BoardData.GetLength(1); j++)
+            for (int j = 0; j < legnth; j++)
             {
                 BoardData[i, j] = new GamePiece(GamePiece.PieceColor.Empty);
             }
@@ -25,33 +26,51 @@ public class BoardState : MonoBehaviour
     }
     void Start()
     {
+        boardWidth = BoardData.GetLength(0);
+        boardLength = BoardData.GetLength(1);
 
-
-        SetUpBoardData();
+        SetUpBoardData(boardWidth, boardLength);
+        SetStartPos();
 
 
     }
 
 
     //Sets up the starting 4 gamepieces in the typical othello setup
-    void SetBoardStart()
+    void SetStartPos()
     {
+        int startPos = (boardLength / 2) - 1;
+
+        for (int i = 0; i < 2; i++)
+        {
+
+
+            Vector3Int whitePos = new Vector3Int(startPos + i, startPos + i, 0);
+            Vector3Int blackPos = new Vector3Int(startPos + i, startPos + 1 - i, 0);
+
+            PlacePiece(GamePiece.PieceColor.White, whitePos);
+            PlacePiece(GamePiece.PieceColor.Black, blackPos);
+        }
 
 
     }
 
 
-    public void PlacePiece(GamePiece plannedPiece, Vector3Int targetLocation)
+    public void PlacePiece(GamePiece.PieceColor plannedColor, Vector3Int targetLocation)
     {
+        GamePiece plannedPiece = new GamePiece(plannedColor);
 
-
-        if(LocationStatus(targetLocation).pieceColor != GamePiece.PieceColor.Empty) {
-            Debug.LogWarning("Can't Place a piece here");
-            return;
+        if (plannedPiece.pieceColor != GamePiece.PieceColor.Empty)
+        {
+            if (LocationStatus(targetLocation).pieceColor != GamePiece.PieceColor.Empty)
+            {
+                Debug.LogWarning("Can't Place a piece here");
+                return;
+            }
         }
         BoardData[targetLocation.x, targetLocation.y] = plannedPiece;
+   
         piecesMap.SetTile(targetLocation, plannedPiece.tile);
-
     }
 
 
@@ -63,9 +82,9 @@ public class BoardState : MonoBehaviour
             Debug.LogWarning("Your selected space is not within the board");
             return null;
         }
-        Debug.Log(BoardData[0, 0].pieceColor);
 
-        Debug.Log("TEWFDS" + BoardData[location.x, location.y].pieceColor);
+
+
         return BoardData[location.x, location.y];
     }
 
@@ -78,5 +97,6 @@ public class BoardState : MonoBehaviour
             return false;
         return true;
     }
+
 
 }

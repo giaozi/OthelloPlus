@@ -7,21 +7,29 @@ public class GridController : MonoBehaviour
 {
     private Grid grid;
     [SerializeField] private Tilemap interactiveMap = null;
-    [SerializeField] private Tilemap boardMap = null;
-    [SerializeField] private Tile hoverTile = null;
+    [SerializeField] private Tilemap piecesMap = null;
+    //[SerializeField] private Tile hoverTile = null;
     //[SerializeField] private Tile boardTile = null;
     [SerializeField] private Tile whiteBoardTile = null;
     [SerializeField] private Tile blackBoardTile = null;
 
     [SerializeField] private BoardState boardState = null;
 
-
+    Vector3Int mousePos;
     private Vector3Int previousMousePos = new Vector3Int();
+
+    GamePiece blackPiece;
+    GamePiece whitePiece;
+    GamePiece currentPiece;
 
     // Start is called before the first frame update
    void Start()
    {
-       grid = gameObject.GetComponent<Grid>();
+        grid = gameObject.GetComponent<Grid>();
+        blackPiece = new GamePiece(GamePiece.PieceColor.Black);
+        whitePiece = new GamePiece(GamePiece.PieceColor.White);
+
+        currentPiece = blackPiece;
    }
 
    // Update is called once per frame
@@ -29,34 +37,42 @@ public class GridController : MonoBehaviour
    {
 
        // Mouse over -> highlight tile
-       Vector3Int mousePos = GetMouseTilePosition();
-       if (!mousePos.Equals(previousMousePos))
-       {
+        mousePos = GetMouseTilePosition();
+
+        if (!mousePos.Equals(previousMousePos))
+        {
             if (!boardState.IsInsideBoard(mousePos)) { return; }
 
             interactiveMap.SetTile(previousMousePos, null); // Remove old hoverTile
-            interactiveMap.SetTile(mousePos, hoverTile);
+            interactiveMap.SetTile(mousePos, currentPiece.tile);
             previousMousePos = mousePos;
-       }
+        }
 
-
-       if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
        {
-            Debug.Log("Click");
-            Debug.Log("Tile Position @" + GetMouseTilePosition());
-
-
-            boardState.PlacePiece (NewGamePiece(GamePiece.PieceColor.Black),  GetMouseTilePosition());
+            boardState.PlacePiece ((currentPiece.pieceColor),  GetMouseTilePosition());
            //WebsocketManager.WebsocketSendText(Input.mousePosition.ToString());
        }
 
        // Right mouse click -> remove path tile
-       if (Input.GetMouseButton(1))
+       if (Input.GetMouseButtonDown(1))
        {
-            boardMap.SetTile(mousePos, null);
-       }
+            boardState.PlacePiece((GamePiece.PieceColor.Empty), GetMouseTilePosition());
+        }
 
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            if (currentPiece == blackPiece)
+                currentPiece = whitePiece;
+            else
+                currentPiece = blackPiece;
+
+
+            interactiveMap.SetTile(mousePos, currentPiece.tile);
+            Debug.Log("Switch");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             Debug.Log("Piece @" + GetMouseTilePosition() + " is "+ boardState.LocationStatus(GetMouseTilePosition()).pieceColor);
         }
@@ -69,27 +85,6 @@ public class GridController : MonoBehaviour
 
         return mouseGridPos;
     }
-
-    //used to set the tile
-    GamePiece NewGamePiece(GamePiece.PieceColor color)
-    {
-        if(color != GamePiece.PieceColor.White && color != GamePiece.PieceColor.Black)
-        {
-            Debug.LogWarning("Piece has no color");
-            return null;
-        }
-
-
-        Tile newPieceTile =null;
-        if(color == GamePiece.PieceColor.White) { newPieceTile = whiteBoardTile; }
-        if(color == GamePiece.PieceColor.Black) { newPieceTile = blackBoardTile; }
-
-
-        return new GamePiece(color, newPieceTile);
-
- 
-     }
-
 
 }
 

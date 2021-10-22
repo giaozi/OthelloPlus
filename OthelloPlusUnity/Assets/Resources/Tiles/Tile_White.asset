@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: SpriteSheet_PlaceholderTiles_6
+  m_Name: Tile_White
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 5578776673522204881, guid: 54b51099a38f5504b8939e2733155949, type: 3}
+  m_Sprite: {fileID: -8552366631315904812, guid: 54b51099a38f5504b8939e2733155949, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
