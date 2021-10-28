@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class BoardState : MonoBehaviour
 {
     [SerializeField] private Tilemap piecesMap = null;
-    [SerializeField] private Tilemap boardMap = null;
+  //  [SerializeField] private Tilemap boardMap = null;
 
 
     int boardWidth;
